@@ -1,32 +1,32 @@
 package com.ptl.rabbit.upgrade.asy.config;
 
 import com.ptl.rabbit.upgrade.asy.handler.Receiver;
-import com.ptl.rabbit.upgrade.asy.listener.RabbitMessageListener;
-import com.rabbitmq.client.ShutdownSignalException;
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.connection.*;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.Connection;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.rabbit.support.CorrelationData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.support.RetryTemplate;
-import org.springframework.stereotype.Component;
 
 /**
  * created by panta on 2018/1/9.
  *
  * @author panta
  */
-@Component
+@Configuration
 public class RabbitConfiguration {
 
     public final static String QUEUE_NAME = "spring-boot";
 
-    @Autowired
-    private RabbitMessageListener listener;
+//    @Autowired
+//    private RabbitMessageListener listener;
 
     /**
      * Queues are where the messages end up and are received by consumers
@@ -58,7 +58,7 @@ public class RabbitConfiguration {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setQueueNames(QUEUE_NAME);
         container.setConnectionFactory(factory);
-        container.setMessageListener(listener);
+        container.setMessageListener(adapter);
         return container;
     }
 
